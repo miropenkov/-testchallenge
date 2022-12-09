@@ -1,0 +1,263 @@
+swagger: '2.0'
+info:
+  description: TestChallenge API
+  version: 0.0.7
+  title: Product Ordering API
+  contact:
+    email: no-reply@test.challenge
+  license:
+    name: Apache 2.0
+    url: 'http://www.apache.org/licenses/LICENSE-2.0.html'
+host: api.test.challenge
+basePath: /rest
+schemes:
+  - http
+  - https
+produces:
+  - application/json
+tags:
+  - name: testchallenge
+    description: Product ordering operations
+paths:
+  '/product/{productId}/product':
+    get:
+      tags:
+        - testchallenge
+      operationId: getProduct
+      summary: get single Product.
+      parameters:
+        - in: path
+          name: productId
+          required: true
+          type: integer
+          format: int64
+      responses:
+        200:
+          description: Success
+          schema:
+            $ref: '#/definitions/Product'
+        404:
+          description: The product not found
+        406:
+          description: The request data not acceptable
+    put:
+      tags:
+        - testchallenge
+      operationId: updateProduct
+      summary: update Product.
+      parameters:
+        - in: path
+          name: productId
+          required: true
+          type: integer
+          format: int64
+        - in: body
+          name: request
+          required: true
+          schema:
+            $ref: '#/definitions/RequestUpdateProduct'
+      responses:
+        200:
+          description: Success
+          schema:
+            $ref: '#/definitions/Product'
+        406:
+          description: The request data not acceptable
+    delete:
+      tags:
+        - testchallenge
+      operationId: deleteProduct
+      summary: delete Product.
+      parameters:
+        - in: path
+          name: productId
+          required: true
+          type: integer
+          format: int64
+      responses:
+        200:
+          description: Success
+        406:
+          description: The request data not acceptable
+  '/product':
+    post:
+      tags:
+        - testchallenge
+      operationId: createProduct
+      summary: create a Product.
+      parameters:
+        - in: body
+          name: request
+          required: true
+          schema:
+            $ref: '#/definitions/RequestCreateProduct'
+      responses:
+        200:
+          description: Success
+          schema:
+            $ref: '#/definitions/Product'
+        406:
+          description: The request data not acceptable
+  '/product/list':
+    get:
+      tags:
+        - testchallenge
+      operationId: getProducts
+      summary: get Products.
+      parameters:
+        - $ref: '#/parameters/Direction'
+        - $ref: '#/parameters/OrderBy'
+        - $ref: '#/parameters/Page'
+        - $ref: '#/parameters/PageSize'
+      responses:
+        200:
+          description: Success
+          schema:
+            $ref: '#/definitions/ResponseGetProducts'
+        406:
+          description: The request data not acceptable
+  '/products/{productId}/order/{quantity}':
+    post:
+      tags:
+        - testchallenge
+      operationId: createProductOrder
+      summary: order product.
+      parameters:
+        - in: path
+          name: productId
+          required: true
+          type: integer
+          format: int64
+        - in: path
+          name: quantity
+          required: true
+          type: integer
+          format: int64
+      responses:
+        200:
+          description: Success
+          schema:
+            $ref: '#/definitions/Product'
+        406:
+          description: The request data not acceptable
+        409:
+          description: The quantity exceed product availability
+  '/categories':
+    get:
+      tags:
+        - testchallenge
+      operationId: getCategories
+      summary: get categories report.
+      responses:
+        200:
+          description: Success
+          schema:
+            type: array
+            items:
+              $ref: '#/definitions/Category'
+definitions:
+  Product:
+    type: object
+    properties:
+      Id:
+        type: integer
+        format: int64
+      name:
+        type: string
+      category:
+        type: string
+      description:
+        type: string
+      quantity:
+        type: integer
+        format: int64
+      created:
+        type: string
+        format: date-time
+      modified:
+        type: string
+        format: date-time
+  Category:
+    type: object
+    properties:
+      name:
+        type: string
+      quantity:
+        type: integer
+        format: int64
+  ResponseGetProducts:
+    type: object
+    allOf:
+      - $ref: '#/definitions/PaginatedResponse'
+      - type: object
+        properties:
+          items:
+            type: array
+            items:
+              $ref: '#/definitions/Product'
+  RequestCreateProduct:
+    type: object
+    properties:
+      name:
+        type: string
+      category:
+        type: string
+      description:
+        type: string
+      quantity:
+        type: integer
+        format: int64
+  RequestUpdateProduct:
+    type: object
+    properties:
+      name:
+        type: string
+      category:
+        type: string
+      description:
+        type: string
+      quantity:
+        type: integer
+        format: int64
+  ResponseCategories:
+    type: object
+    properties:
+      items:
+        type: array
+        items:
+          $ref: '#/definitions/Category'
+  PaginatedResponse:
+    type: object
+    required:
+      - page
+      - pageSize
+      - totalRecords
+    properties:
+      page:
+        type: integer
+      pageSize:
+        type: integer
+      totalRecords:
+        type: integer
+        format: int64
+parameters:
+  OrderBy:
+    name: orderBy
+    in: query
+    description: name of column to be sorder
+    type: string
+  Direction:
+    name: direction
+    in: query
+    description: list sorting ASC or DESC
+    type: string
+  PageSize:
+    name: pageSize
+    in: query
+    description: Number of records to return
+    type: integer
+  Page:
+    name: page
+    in: query
+    description: Start index for paging
+    type: integer

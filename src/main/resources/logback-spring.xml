@@ -1,0 +1,52 @@
+<configuration>
+
+    <include resource="org/springframework/boot/logging/logback/defaults.xml"/>
+
+    <property name="LOG_ROLLING-FILE"
+              value="${LOG_ROLLING-FILE:-${LOG_PATH:-${LOG_TEMP:-${java.io.tmpdir:-/tmp}}}/api-impl.log}"/>
+    <property name="LOG_ARCHIVE-FILE" value="${LOG_ROLLING-FILE}.%d{yyyy-MM-dd}.%i}"/>
+
+    <appender name="STDOUT" class="ch.qos.logback.core.ConsoleAppender">
+        <encoder class="ch.qos.logback.classic.encoder.PatternLayoutEncoder">
+            <Pattern>%date{ISO8601} %-5level [%logger{36}] SID=%X{SessionId} CID=%X{RequestId} [%thread] %msg%n
+            </Pattern>
+        </encoder>
+    </appender>
+
+    <appender name="ROLLING-FILE" class="ch.qos.logback.core.rolling.RollingFileAppender">
+        <file>${LOG_ROLLING-FILE}</file>
+        <encoder class="ch.qos.logback.classic.encoder.PatternLayoutEncoder">
+            <Pattern>%date{ISO8601} %-5level [%logger{36}] SID=%X{ContextId} CID=%X{RequestId} [%thread] %msg%n
+            </Pattern>
+        </encoder>
+        <rollingPolicy class="ch.qos.logback.core.rolling.SizeAndTimeBasedRollingPolicy">
+            <fileNamePattern>${LOG_ARCHIVE-FILE}</fileNamePattern>
+            <maxHistory>180</maxHistory>
+            <maxFileSize>2GB</maxFileSize>
+        </rollingPolicy>
+    </appender>
+
+    <logger name="org.springframework" level="WARN"/>
+
+    <logger name="org.springframework.ws" level="WARN"/>
+    <logger name="org.springframework.security" level="WARN"/>
+
+    <logger name="org.springframework.ws.server.MessageTracing" level="INFO"/>
+    <logger name="org.springframework.ws.client.MessageTracing" level="INFO"/>
+
+    <logger name="org.springframework.web.client.MessageTracing" level="INFO"/>
+
+    <logger name="spring.web.client.MessageTracing.sent" level="INFO"/>
+    <logger name="spring.web.client.MessageTracing.received" level="INFO"/>
+
+    <logger name="org.zalando.logbook.Logbook" level="TRACE"/>
+
+
+    <logger name="com.zaxxer.hikari" level="INFO"/>
+    <logger name="org.hibernate.SQL" level="TRACE"/>
+    <logger name="org.hibernate.type.descriptor.sql.BasicBinder" level="TRACE"/>
+
+    <root level="INFO">
+        <appender-ref ref="STDOUT"/>
+    </root>
+</configuration>

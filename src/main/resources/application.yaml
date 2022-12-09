@@ -1,0 +1,26 @@
+spring:
+  main:
+    banner-mode: "off"
+  h2.console:
+    enabled: true
+    path: /h2-console
+  liquibase:
+    liquibaseSchema: "public"
+    database-change-log-lock-table: "testchallenge_DATABASECHANGELOGLOCK"
+    database-change-log-table: "testchallenge_DATABASECHANGELOG"
+management:
+  endpoint:
+    metrics.enabled: true
+    httptrace.enabled: true
+    shutdown.enabled: true
+  endpoints.web.exposure.include: metrics, health, info, httptrace, jolokia
+logbook:
+  include:
+    - /rest/**
+  exclude:
+    - /actuator/health
+  filter.enabled: true
+  secure-filter.enabled: true
+  format.style: http
+  strategy: body-only-if-status-at-least
+  minimum-status: 400

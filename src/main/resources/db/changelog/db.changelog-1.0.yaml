@@ -1,0 +1,79 @@
+databaseChangeLog:
+  - changeSet:
+      id: 1x
+      author: mpenkov
+      changes:
+        - sql:
+            sql: CREATE SCHEMA testchallenge;
+  - changeSet:
+      id: 2x
+      author: mpenkov
+      changes:
+        - createTable:
+            schemaName: testchallenge
+            tableName: product
+            columns:
+              - column:
+                  autoIncrement: true
+                  constraints:
+                    primaryKey: true
+                  name: id
+                  type: BIGINT
+              - column:
+                  constraints:
+                    nullable: false
+                  name: name
+                  type: VARCHAR(200)
+              - column:
+                  constraints:
+                    nullable: false
+                  name: category
+                  type: VARCHAR(200)
+              - column:
+                  constraints:
+                    nullable: false
+                  name: description
+                  type: VARCHAR(2000)
+              - column:
+                  constraints:
+                    nullable: false
+                  name: quantity
+                  type: BIGINT
+              - column:
+                  constraints:
+                    nullable: false
+                  name: created
+                  type: datetime
+              - column:
+                  constraints:
+                    nullable: false
+                  name: modified
+                  type: datetime
+        - createIndex:
+            columns:
+              - column:
+                  name: name
+            indexName: inx_product_name
+            schemaName: testchallenge
+            tableName: product
+        - createIndex:
+            columns:
+              - column:
+                  name: category
+            indexName: inx_product_category
+            schemaName: testchallenge
+            tableName: product
+  - changeSet: #initial test data
+      id: 3x
+      author: mpenkov
+      changes:
+        - sql: "INSERT INTO testchallenge.product(name,category,description,quantity,created,modified) VALUES('Watch 11','Accessory','Handle watch 11',15,NOW(),NOW());"
+        - sql: "INSERT INTO testchallenge.product(name,category,description,quantity,created,modified) VALUES('Еarphones','Accessory','Еarphones QW345',10,NOW(),NOW());"
+        - sql: "INSERT INTO testchallenge.product(name,category,description,quantity,created,modified) VALUES('Metal press','Tools','Metal press 356',25,NOW(),NOW());"
+        - sql: "INSERT INTO testchallenge.product(name,category,description,quantity,created,modified) VALUES('Clamp','Tools','Clamp ZE4RT',25,NOW(),NOW());"
+        - sql: "INSERT INTO testchallenge.product(name,category,description,quantity,created,modified) VALUES('Mask','Accessory','Mask xx34rrr',250,NOW(),NOW());"
+        - sql: "INSERT INTO testchallenge.product(name,category,description,quantity,created,modified) VALUES('Wrench 10','Tools','Hand wrench 10',15,NOW(),NOW());"
+        - sql: "INSERT INTO testchallenge.product(name,category,description,quantity,created,modified) VALUES('Pliers','Tools','Hand Pliers',5,NOW(),NOW());"
+        - sql: "INSERT INTO testchallenge.product(name,category,description,quantity,created,modified) VALUES('Boring machine','Tools','Boring machine - 234',2,NOW(),NOW());"
+        - sql: "INSERT INTO testchallenge.product(name,category,description,quantity,created,modified) VALUES('Pump','Tools','Hand pump',25,NOW(),NOW());"
+        - sql: "INSERT INTO testchallenge.product(name,category,description,quantity,created,modified) VALUES('Gloves','Accessory','Gloves M',55,NOW(),NOW());"
